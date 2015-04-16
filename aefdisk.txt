@@ -1,0 +1,766 @@
+		    ÉÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ»
+		    º   AEFDISK open source v1.0 DOCS     º
+		    º Copyright (c) 1997-2015 Nagy Daniel º
+		    º      Release date: 04-16-2015       º
+		    ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ¼
+ÚÄÄÄÄÄÄÄÄÄÄ¿
+³ CONTENTS ³
+ÀÄÄÄÄÄÄÄÄÄÄÙ
+
+		Disclaimer............................ 1
+
+                Copyright............................. 2
+
+		Introduction.......................... 3
+
+                Files in the Package.................. 4
+
+		Features.............................. 5
+
+		Requirements.......................... 6
+
+		Usage................................. 7
+
+                Partition types....................... 8
+
+		Technical information................. 9
+
+		History.............................. 10
+
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ DISCLAIMER ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 1 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+        Using this program comes without any warranty. The author
+        and distributors will not accept responsibility for any
+        damage incurred directly or indirectly through use of this
+        program.
+        In other words: use at your own risk!
+
+ÚÄÄÄÄÄÄÄÄÄÄÄ¿
+³ COPYRIGHT ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 2 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÄÄÄÄÙ
+
+	GPL2
+
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ INTRODUCTION ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 3 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+        AEFDISK is a DOS based, command line driven disk partitioning
+        utility. With AEFDISK you can:
+
+        - Create primary, extended and logical partitions
+        - Delete primary, extended and logical partitions (and wipe them)
+        - Format FAT partitions
+        - Hide and unhide FAT, NTFS/HPFS partitions
+        - Activate/deactivate a partition
+        - Show the partition table
+        - Show characteristics of harddisks
+        - Install the standard MBR loader to a harddisk
+        - Save or restore the MBR
+        - Set up hundreds of harddisks with a simple batch file on a floppy
+        - and more...
+
+        in a highly flexible and comfortable way from the command line.
+
+        AEFDISK supports all partition types. The original FDISK program
+        doesn't allow you to create more than one primary partition.
+        AEFDISK does, therefore it's a powerful tool for creating
+        any combinations of partitions. This can be extremely useful
+        for system administrators and OS deployment.
+
+        Put it in the autoexec.bat of a system floppy, and you're
+        ready to partition hundreds of harddisks quickly!
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ FILES IN THE PACKAGE ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 4 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+        AEFDISK.ASM  - Source code
+        AEFDISK.TXT  - English documentation
+        FAT16.INC    - FAT16 boot sector
+        FAT32.INC    - FAT32 boot sector
+	LICENSE      - GPL2 license file
+	MAKEFILE     - Makefile for compiling/linking
+
+ÚÄÄÄÄÄÄÄÄÄÄ¿
+³ FEATURES ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 5 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÄÄÄÙ
+
+        - Creating all types of partitions, with absolute or relative size
+
+        - Deleting partitions based on their type or place in the table
+
+        - Formatting FAT partitions quickly
+
+        - Hiding and unhiding FAT, NTFS/HPFS partitions
+
+        - Changing a partition's type ID
+
+        - Activating a partition
+
+        - Installing standard loader code in the Master Boot Record
+
+        - Displaying partition information
+
+        - Displaying logical characteristics information
+
+        - Completely command line driven
+
+        - Automatic calculation of free space and available partition entry
+
+        - Handling as many harddisks as your hardware and BIOS supports
+
+        - Support for max 8 GB harddisk without Extended BIOS
+
+        - Support for max 2 TB harddisks if Extended BIOS is present
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ REQUIREMENTS ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 6 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+     - 80386 processor or better
+     - MS-DOS or compatible operating system
+     - At least one harddisk
+
+ÚÄÄÄÄÄÄÄ¿
+³ USAGE ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 7 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÙ
+
+     Note: Playing with partitions is a risky job! Use this program only
+           if you know what you're doing! Be sure to read the documentation!
+
+     1) Installation
+
+        You can copy these files (this docs and the executable) together
+        wherever you like. This program doesn't need any additional
+        settings. Just execute it.
+        Copying this program to a system floppy can be useful.
+
+
+     2) Command line usage
+
+        Syntax: aefdisk [harddisk number] [switches] <command1> [command2] ...
+
+        Valid commands are:
+        /pri:<size>:<type>[:n] - create primary partition
+        /ext:<size>[:5][:n]    - create extended partition
+        /log:<size>[:type]     - create logical drive
+        /delete:<n>            - delete an entry
+        /deltype:<type>[:n]    - delete partition(s) of specified type
+        /delactive             - delete active partition
+        /delall                - delete all partitions on a disk
+        /notdel:<type>[,types] - delete all except specified type(s)
+        /activate:<n>          - activate a partition
+        /deactivate            - delete active flag
+        /changetype:<type>:<n> - change type of partition
+        /hidefat[:n]           - hide FAT partition(s)
+        /hident[:n]            - hide NTFS/HPFS partition(s)
+        /unhidefat[:n]         - unhide FAT partition(s)
+        /unhident[:n]          - unhide NTFS/HPFS partition(s)
+        /formatfat[:n][:label] - format FAT partitions, can be a switch
+        /allsize               - put the HD size in ALLSIZE environment var.
+        /freesize              - puts size of unpartitioned space in FREESIZE
+        /psize                 - puts n-th partition's size in PSIZEnn
+        /ptype                 - puts n-th partition's type in PTYPEnn
+        /putactive             - puts active partition nr. in ACTIVE variable
+        /numhds                - puts number of available HDs in NUMHDS
+        /mbr                   - install the standard DOS MBR loader
+        /sort                  - sorts the partition table in physical order
+        /save:<filename>       - save the MBR to a file
+        /restore:<filename>    - restore the MBR from a file
+        /cvtarea:<n>           - create a contiguous file for NTFS conversion
+        /label:<n>:<label>     - create/change label on formatted FAT partition
+        /show                  - show partition table
+        /dump                  - hexadecimal dump of partition table
+        /info                  - show logical characteristics
+        /?                     - this help message
+
+        Valid switches are:
+        /rel                   - use percentages at size definition
+        /y                     - assume Yes on all queries
+        /wipe                  - wipe partitions to be deleted
+        /reboot                - reboot when ready
+        /dynamic               - leave space for Win2000/XP/2003 dynamic volume
+        /noebios               - disables EBIOS access
+        /nolimit               - disables FAT limit check
+
+        - Options between <> are compulsory, between [] are not
+	- n is a valid partition number. From 1 to 4 it means a primary
+          partition. From 5 it means a logical drive
+        - Harddisk number is a number starting from 1. The default is 1.
+          If you specify '*' here, then all commands will be executed on
+          all installed harddisks
+	- The /rel and /formatfat switches are effective for the commands
+          that follow them.
+        - The type is hexadecimal. Don't append a 'h' at the end
+
+        If there was an error then the return value is 1, else 0.
+        On error, the modified partition table will not be written.
+
+
+        Creating partitions:
+        -------------------
+
+        You can create partitions with the /pri, /ext or /log commands.
+        Aefdisk automatically finds the largest unpartitioned space and
+        creates new partitions there. If there is an existing partition
+        in the middle of the harddisk and the new partition should be
+        created in the smaller unpartitioned chunk, create a dummy
+        partition in the larger first.
+
+        The /pri command can be used to create primary partitions.
+        The size and type must be specified, partition number is
+        optional. If the specified size is 0 then all available
+        space will be allocated. The created partition will be
+        automatically set as active, this can be changed later with
+        the /activate command if needed.
+
+        The /ext command can be used to create an extended partition,
+        which can contain many logical drives. Only one extended partition
+        is allowed per harddisk. You can force AEFDISK to create type '5'
+        extended partition, even if it'd end beyond 8 gigs (WindowsNT 4.0
+        cannot handle type 'f' extended partitions).
+        If the specified size is 0 then all available space will be
+        allocated.
+
+        The /log command can be used to create logical drives in an
+        extended partition. The extended partition must exist before
+        using this command. If the type is not specified, this command
+        will create FAT16 or FAT32 drives, based on the size. The 0 as
+        size cannot be used here, so creating the largest possible
+        logical drive needs the /rel switch.
+
+
+        Deleting partitions:
+        -------------------
+
+        You can delete partitions with the /delete, /deltype, /delactive,
+        /delall and /notdel commands. Do not put deleting commands after the
+        /rel switch!
+
+        The /delete command deletes the specified partition entry.
+
+        The /deltype command deletes a partition or partitions
+        of the specified type. If the entry number is not specified,
+        then all paritions of the specified type will be deleted.
+        If the entry number is also specified, then the partition will
+        be deleted only if the specified type matches the partition type.
+
+        The /delactive deletes the active partition.
+
+        The /delall command deletes all partitions on a harddisk.
+
+        The /notdel command deletes all partitions except the specified
+        types separated with commas. You can specify up to 20 types to
+        be excluded.
+
+        If you specify the /wipe switch before any deletion command,
+        all sectors of the deleted partitions will be filled with
+        0xFF values, thus totally wiping all data in them. Note, that
+        wiping partitions can take some time.
+
+
+        Relative sizes:
+        --------------
+
+        The /rel command can be used to avoid specifying absolute MB
+        sizes. If the /rel command is used then all size definitions
+        will be treated as percent values from 1 to 100.
+
+        This switch can be used with the /pri, /ext and /log commands.
+        This switch calculates the unpartitioned space and divides
+        it as specified, see the examples below.
+
+        If a specified type doesn't allow the size that is calculated,
+        then that partition will be automatically sized to the maximum
+        size the type allows, and the remaining space will be added to
+        the next partition which follows it on the command line.
+        For example, you have a 5Gig harddisk, and do the following:
+        aefdisk /rel /pri:50:6 /ext:50 /log:100
+        Then aefdisk will create a 2Gig BIGDOS partition (not 2.5,
+        because BIGDOS allows only 2Gig), gives a warning message,
+        and append the remaining 0.5Gig to the extended partition.
+
+
+        (Un)Hiding FAT, NTFS/HPFS partitions:
+        ------------------------------------
+
+        The /hidefat command hides FAT partitions on a harddisk.
+        If the partition entry is specified, then this command tries
+        to hide only that partition. If no partition is specified,
+        this command will hide all primary FAT partitions.
+        The /unhidefat command has similar behavior for unhiding.
+        /hident and /unhident are the same but for NTFS/HPFS partitions.
+
+
+        Formatting FAT partitions:
+        --------------------------
+
+        The /formatfat command allows formatting FAT16 and FAT32
+        partitions. The data clusters aligned to 4k clusters (in
+        case of an unformatted partition), so data access is faster
+        than using normal format, and the volume can be converted
+        effectively to NTFS later (see also the /cvtarea command).
+        This parameter can be used as a command or a switch:
+
+        1)If the partition number is not specified, then this command
+          acts as a switch, and must appear before any partition
+          creation command on the command line. In this case all
+          partitions which are created will be immediately formatted.
+
+        2)If the partition number is specified, only that partition
+          will be formatted, if it already exists. In this case, an
+          optional volume label can be specified. If the specified
+          partition number is 5 or higher, then it'll mean a logical
+          drive. 5 means the first logical drive and so on.
+
+
+        Other commands and switches:
+        ---------------------------
+
+        - The /activate command activates the specified primary partition.
+
+        - The /deactivate command clears the active flag if any.
+
+        - The /changetype command changes the specified partition's
+          type ID to the specified value. It doesn't touch the file
+          system, only the ID in the partition table. This can be useful
+          to make diagnostic partitions visible or hidden.
+
+        - The /save command saves the MBR to a specified file.
+
+        - The /restore command restores the MBR from a specified file.
+          Combining this command with others is NOT recommended!
+
+        - The /mbr command installs the standard loader code on the
+          specified harddisk. It's like the original 'fdisk /mbr' command.
+
+        - The /sort command sorts the partition table. Sorting is based
+          on the partitions' physical location. The first partition
+          on the disk will occupy the first partition entry and so on.
+          Empty entries will be placed to the end of the partition table.
+          This command is useful to maintain partition numbering
+          compatibility with other partitioning utilities, which number
+          partitions based on physical location on disk.
+
+        - The /show command prints some information about the
+          partition table of the specified harddisk.
+
+        - The /dump command shows the hexadecimal dump of the
+          partition table.
+
+        - The /info command shows the logical characteristics of the
+          harddisk and checks if extended BIOS is availabe.
+
+        - The /reboot command causes a reboot after all modifications
+          are written back to the disk. If there is an error, then
+          this command does nothing.
+
+        - The /dynamic command leaves 10Mb unpartitioned space at
+          the end of the harddisk if you specify 0 as partition size.
+          This is useful if you want to convert the drive later to a
+          Win2000/XP/2003 dynamic volume.
+
+        - The /cvtarea command creates a contiguous file called
+          cvtarea.tmp on the specified FAT32 partition. The partition
+          must be formatted and empty. The file placement and size is
+          calculated automatically. This is useful for converting the
+          partition to NTFS using the 'convert' deployment tool from
+          Microsoft. The system must be rebooted after using this command.
+
+        - The /label command creates or changes the label of the
+          specified primary or logical FAT partition. The label can be
+          max 11 characters.
+
+        - The /noebios switch disables EBIOS access. This can be
+          useful on machines which have buggy EBIOS support.
+
+        - The /nolimit switch disables FAT size checking. This may be
+          useful when creating FAT16 partitions larger than 2 gigs or
+          FAT32 partitions larger than 127 gigs.
+
+        - The /allsize command puts the HD size in megabytes in
+          an environment variable named ALLSIZE. This can be useful
+          for making size dependant decisions in batch files.
+
+        - The /freesize command puts the largest unpartitioned size
+          in megabytes in an environment variable named FREESIZE.
+          This can be useful for making size dependant decisions in
+          batch files.
+
+        - The /psize command puts the specified partition's size
+          in megabytes in an environment variable called PSIZEnn,
+          where n is the number of the specified partition, with a
+          leading zero if n < 10.
+
+        - The /ptype command puts the specified partition's type
+          as a decimal value in an environment variable called PTYPEnn,
+          where n is the number of the specified partition, with a
+          leading zero if n < 10.
+
+        - The /putactive command puts the active partition's number
+          in environment variable called ACTIVE. If no active partition
+          is found, this value will be 0.
+
+        - The /numhds command puts the number of available harddisks
+          in an environment variable called NUMHDS.
+
+
+        Examples:
+        --------
+
+        - aefdisk 2 /delall /pri:200:6 /pri:300:7:4 /activate:1
+          Delete all partitions on the second harddisk and then create
+          two primary partitions. The first is a 200 MB BIGDOS partition,
+          and it is be created in the first available entry. The second
+          is a 300MB HPFS partition, and it is created in the fourth entry.
+          The first primary partition will be active.
+
+        - aefdisk /pri:3000:7 /ext:10000 /log:10000
+          Create a 3GB primary HPFS and a 10GB extended partition with
+          one 10GB logical drive.
+
+        - aefdisk /dynamic /pri:0:c
+          Find the largest available space and create a FAT32 partition
+          there. Leave 10MB unpartitioned space at the end of the
+          harddisk for Win2000/XP/2003 dynamic volume conversion.
+
+        - aefdisk /rel /pri:30:6 /ext:70 /log:40 /log:60
+          Calculate the available unpartitioned space first. Then create
+          a primary BIGDOS partition, which occupies 30% of the free space.
+          The remaining 70% space is assigned to an extended partition.
+          In the extended partition, there are two logical drives. The first
+          occupies 40% of the extended partition, the second occupies 60%.
+
+        - aefdisk /formatfat /pri:2000:83 /ext:0 /rel /log:100
+          Create a 2GB Linux partition, and then create an extended
+          partition with one logical drive in the remaining free space,
+          which is calculated automatically. The logical drive will be
+          formatted.
+
+        - aefdisk 3 /notdel:1,6,83 /mbr /hidefat
+          Deletes all partitions except the specified ones (FAT12, BIGDOS
+          and Linux), install the loader code in the MBR, then hide all
+          primary FAT partitions on the third harddisk.
+
+        - aefdisk * /hident
+          Hides all primary NTFS/HPFS partitions on all available harddisks.
+
+        - aefdisk /changetype:6:1 /reboot
+          Change the type ID of the 1st partition to BIGDOS then reboot.
+          This is useful if - let's say - the first partition is a Compaq
+          diagnostic partition and we're corious about its contents.
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ PARTITION TYPES ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 8 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+        These are the currently known partition types. These values are
+        from Ralph Brown's interrupt list. (A big thanks goes to him for
+        maintaining that impressive documentation!)
+
+        ID      Name
+        ÄÄ      ÄÄÄÄ
+        00h     empty
+        01h     DOS 12-bit FAT
+        02h     XENIX root file system
+        03h     XENIX /usr file system (obsolete)
+        04h     DOS 16-bit FAT (up to 32M)
+        05h     DOS 3.3+ extended partition
+        06h     DOS 3.31+ Large File System (16-bit FAT, over 32M)
+        07h     QNX
+        07h     OS/2 HPFS
+        07h     Windows NT NTFS
+        07h     Advanced Unix
+        08h     OS/2 (v1.0-1.3 only)
+        08h     AIX bootable partition, SplitDrive
+        08h     SplitDrive
+        08h     Commodore DOS
+        08h     DELL partition spanning multiple drives
+        08h     QNX 1.x and 2.x
+        09h     AIX data partition
+        09h     Coherent filesystem
+        09h     QNX 1.x and 2.x
+        0Ah     OS/2 Boot Manager
+        0Ah     OPUS
+        0Ah     Coherent swap partition
+        0Bh     Windows 95 OSR2 with 32-bit FAT
+        0Ch     Windows 95 OSR2 with 32-bit FAT (LBA-mode INT 13 extensions)
+        0Eh     LBA VFAT (same as 06h but using LBA-mode INT 13)
+        0Fh     LBA VFAT (same as 05h but using LBA-mode INT 13)
+        10h     OPUS
+        11h     Hidden 12-bit FAT partition, OS/2 FAT12
+        12h     Compaq/HP Diagnostics partition (FAT compatible)
+        14h     (using Novell DOS 7.0 FDISK to delete Linux Native part)
+        14h     Hidden sub-32M 16-bit FAT partition
+        16h     Hidden over-32M 16-bit FAT partition
+        17h     Hidden HPFS partition
+        18h     AST special Windows swap file
+        19h     Willowtech partition
+        1Bh     Hidden Windows 95 with 32-bit FAT
+        1Ch     Hidden Windows 95 with 32-bit LBA FAT
+        1Eh     Hidden Windows 95 with LBA BIGDOS
+        20h     OFS1
+        21h     officially listed as reserved, FSo2
+        23h     officially listed as reserved
+        24h     NEC DOS 3.x
+        26h     officially listed as reserved
+        31h     officially listed as reserved
+        33h     officially listed as reserved
+        34h     officially listed as reserved
+        36h     officially listed as reserved
+        38h     Theos v3.2 2GB partition
+        39h     Theos v4 spanned partition
+        3Ah     Theos v4 4GB partition
+        3Bh     Theos v4 extended partition
+        3Ch     PowerQuest PartitionMagic recovery partition
+        40h     VENIX 80286
+        41h     Personal RISC Boot
+        41h     Power PC Reference Platform Boot
+        42h     SFS (Secure File System) by Peter Gutmann
+        45h     EUMEL/Elan
+        46h     EUMEL/Elan
+        47h     EUMEL/Elan
+        48h     EUMEL/Elan
+        4Dh     QNX4.x
+        4Eh     QNX4.x 2nd part
+        4Fh     QNX4.x 3rd part
+        4Fh     Oberon
+        50h     OnTrack Disk Manager, read-only partition
+        51h     OnTrack Disk Manager, read/write partition
+        51h     NOVELL
+        52h     CP/M
+        52h     Microport System V/386
+        53h     OnTrack Disk Manager, write-only partition???
+        54h     OnTrack Disk Manager (DDO)
+        55h     EZ-Drive
+        56h     GoldenBow VFeature
+        56h     DM converted to EZ-BIOS
+        57h     DrivePro
+        5Ch     Priam EDisk
+        61h     SpeedStor
+        63h     Unix SysV/386, 386/ix
+        63h     Mach, MtXinu BSD 4.3 on Mach
+        63h     GNU HURD
+        64h     PC-ARMOUR protected partition
+        64h     Novell NetWare 2.xx
+        65h     Novell NetWare 3.xx or 4.xx
+        67h     Novell
+        68h     Novell
+        69h     Novell
+        70h     DiskSecure Multi-Boot
+        71h     officially listed as reserved
+        73h     officially listed as reserved
+        74h     officially listed as reserved
+        75h     IBM PC/IX
+        76h     officially listed as reserved
+        7Eh     F.I.X
+        80h     Minix v1.1 - 1.4a
+        81h     Minix v1.4b+
+        81h     Linux
+        81h     Mitac Advanced Disk Manager
+        82h     Linux Swap partition
+        82h     Prime
+        82h     Solaris x86
+        83h     Linux native file system (ext2fs/xiafs)
+        84h     OS/2-renumbered type 04h partition (hiding DOS C: drive)
+        84h     Hibernation partition
+        85h     Linux extended partition
+        86h     NTFS volume set
+        87h     HPFS Fault-Tolerant mirrored partition
+        8Ah     Linux Kernel Partition (used by AiR-BOOT)
+        8Eh     Linux Logical Volume Manager partition
+        92h     Amoeba
+        93h     Amoeba file system
+        94h     Amoeba bad block table
+        99h     DCE376 logical drive
+        A0h     IBM Thinkpad hibernation partition / PQMagic
+        A0h     Phoenix NoteBIOS Power Management "Save-to-Disk" partition
+        A1h     officially listed as reserved
+        A3h     officially listed as reserved
+        A4h     officially listed as reserved
+        A5h     FreeBSD, NetBSD, BSD/386
+        A6h     OpenBSD
+        A7h     NEXTSTEP
+        A9h     NetBSD
+        AAh     Olivetti Fat 12 1.44Mb Service Partition
+        B1h     officially listed as reserved
+        B3h     officially listed as reserved
+        B4h     officially listed as reserved
+        B6h     officially listed as reserved
+        B7h     BSDI file system (secondarily swap)
+        B8h     BSDI swap partition (secondarily file system)
+        BEh     Solaris boot partition
+        C0h     CTOS
+        C0h     REAL/32 secure small partition / DR-DOS secondary
+        C1h     DR DOS 6.0 LOGIN.EXE-secured 12-bit FAT partition
+        C4h     DR DOS 6.0 LOGIN.EXE-secured 16-bit FAT partition
+        C6h     DR DOS 6.0 LOGIN.EXE-secured Huge partition
+        C7h     Syrinx Boot
+        CAh     FAT-32 (?)
+        CBh     reserved for DRDOS/secured (FAT32)
+        CCh     reserved for DRDOS/secured (FAT32, LBA)
+        CEh     reserved for DRDOS/secured (FAT16, LBA)
+        D0h     REAL/32 secure big partition
+        D1h     Old Multiuser DOS secured FAT12
+        D4h     Old Multiuser DOS secured FAT16 <32M
+        D5h     Old Multiuser DOS secured extended partition
+        D6h     Old Multiuser DOS secured FAT16 >=32M
+        D8h     CP/M-86
+        DBh     CP/M, Concurrent CP/M, Concurrent DOS
+        DBh     CTOS (Convergent Technologies OS)
+        DEh     Dell diagnostic
+        DFh     RadiSys DTS
+        E1h     SpeedStor 12-bit FAT extended partition
+        E3h     DOS read-only
+        E3h     Storage Dimensions
+        E4h     SpeedStor 16-bit FAT extended partition
+        E5h     officially listed as reserved
+        E6h     officially listed as reserved
+        EBh     BeOS partition
+        F1h     Storage Dimensions
+        F2h     DOS 3.3+ secondary partition
+        F3h     officially listed as reserved
+        F4h     SpeedStor
+        F4h     Storage Dimensions
+        F5h     Prologue multi-volume partition
+        F6h     officially listed as reserved
+        FDh     Linux raid partition
+        FEh     LANstep
+        FEh     IBM PS/2 IML
+        FFh     Xenix bad block table
+
+ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+³ TECHNICAL INFORMATION ÃÄÄÄÄÄÄÄÄÄÄÄÄÄ 9 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+        General information:
+        ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+        A harddisk can contain up to four primary partitions. The extended
+        partition is a special primary partition, which can contain many
+        logical drives. If you delete the extended partition, all logical
+        drives in that will be lost too. There can be only one extended
+        partition entry in a partition table.
+        The partition table (which resides in the very first sector of your
+        harddisk) describes the type, activeness, and position of the
+        partitions. In bootable partitions, the first sector is always the so
+        called 'boot sector' which contains a small OS loader. You can install
+        any operating system - in theory - in bootable primary partitions.
+        Some operating systems can be installed in logical drives too.
+
+        About FAT types:
+        ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+
+        There are four types of FAT (File Allocation Table).
+
+        1: FAT12 is now obsolete, used on floppy disks and on partitions
+           smaller than 16Mb.
+        2: FAT16 is the next step. It can be used if a DOS partition
+           is between 16MB and 32Mb.
+        3: BIGDOS is also a 16-bit type, but allows larger partition sizes.
+           Plain DOS and Win9x/ME use this type nowadays (OS/2,
+           WinNT/2000/XP/2003 and Linux can also be installed over FAT,
+           but there is no point for doing that). The maximum partition
+           size is 2Gb for DOS and Win9x/ME, and 4Gb for WinNT/2000/XP/2003.
+        4: FAT32 is the newest, it is introduced in Win95 OEM Service
+           Release 2. Maximum partition size is 127Gb. It is used by
+           Win9x/ME/2000/XP/2003, WinNT 4.0 cannot recognize it.
+
+        With Win95 OSR2, newer types were introduced to indicate that
+        a partition ends beyond the 8Gb limit. These types are:
+        - BIGDOSx (0eh)
+        - Extended x (0fh)
+        - FAT32x (0ch)
+        These types are not recognized by WinNT 4.0!
+
+ÚÄÄÄÄÄÄÄÄÄ¿
+³ HISTORY ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ 10 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+ÀÄÄÄÄÄÄÄÄÄÙ
+
+        Version:
+
+        1.0 - First official release
+
+        1.1 - AEFDISK checks the size and type. Now it is not possible
+              to create invalid size for a size-limited partition type
+            - The /notdel command allows more types to be excluded
+            - Added support for NTFS/HPFS partition hiding
+            - Added /reboot command
+            - Added /formatfat command for immediate FAT formatting
+
+        1.2 - Added support for EBIOS calls. The program can handle
+                disks up to 2 terabytes if EBIOS is present
+            - ANSI C library version is also available (large model)
+            - The /formatfat command changed, please read the documentation
+            - Added /info command to display characteristics and EBIOS info
+
+        1.3 - Bugfixes (formatting, LBA 2 CHS translation)
+            - Added FAT32 formatting
+            - Added /noebios switch to disable EBIOS access
+            - Added /nolimit switch to disable FAT size checks
+            - Added /putsize command to put HD size in environment variable
+            - DOS partitions formatted with AEFDISK can boot from beyond 2 gigs
+            - Added FAQ.TXT
+
+        1.4 - /putsize renamed to /allsize
+            - Added /freesize command to put free size in environment variable
+            - Added BeFS partition type
+            - Now /info shows total capacity too
+
+        1.5 - Bugfixes (FAT32 formatting, huge disk handling over 8 gigs
+                and environment handling)
+
+        1.6 - Bugfix (EBIOS detection routine)
+
+        1.7 - Improved FAT formatting based on the original specification
+            - Added automatic partition type fixing if partition ends beyond
+                1024 cylinders (type '6' to 'e' and 'b' to 'c')
+            - Added /delactive command
+            - Added /save command
+            - Added /restore command
+            - Added /dump command
+            - Extended partition type can be forced to '5' (good for NT)
+            - Type of logical drives can be forced
+            - Can be used in Win9x DOS box (not recommended!)
+
+        1.8 - Added /deactivate command
+            - Added /changetype command
+            - Added /win2000 switch
+            - Added /y switch
+            - Added more partition types
+            - Bugfixed size detection for huge disk arrays
+
+        1.9 - Added /psize command
+            - Added /cvtarea command
+            - Added /label command
+            - Added /numhds command
+            - Added /sort command
+            - /win2000 switch renamed to /dynamic
+            - Some code cleanup and small bugfixes
+            - Formatting aligns clusters properly, so disk access is faster
+            - The /show command now shows volume labels
+            - Hiding/unhiding works with logical drives
+
+        2.0 - Fixed NTFS label detection on logical drives
+            - Fixed environment variable handling bug under FreeDOS and 4DOS
+            - /delete works on logical drives
+            - /show also shows hexadecimal partition IDs
+
+        2.1 - Added /wipe switch
+            - Added /ptype command
+            - Added /putactive command
+            - Better FAT volume label detection
+            - Another fix for 4DOS environment variable handling
+            - Fixed showing of empty logical drives
+
+        2.2 - Fixed disk/controller cache flush when rebooting
+            - Added support for huge disks and partitions (2TB)
+            - FAT partition size adjusting fixed
+
+     OS 1.0 - Released as open source
+            - /nolimit switch works for FAT32 partitions
